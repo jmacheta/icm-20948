@@ -1,93 +1,120 @@
 # icm-20948
 
+`icm-20948` is a modern C++ driver for the TDK InvenSense ICM-20948 9-axis IMU.
+It provides a clear high-level API for device connection, power-state control, sensor configuration, and reading accelerometer, gyroscope, magnetometer, and die-temperature data through user-supplied transport callbacks.
 
+## Highlights
 
-## Getting started
+- Standalone driver library with no external runtime dependencies.
+- Built around modern C++23 features, including `std::expected`, `std::span`, strong typing, and explicit error handling.
+- Transport-agnostic design that integrates cleanly with platform-specific SPI communication layers.
+- Platform-independent source design suitable for embedded and desktop targets with a C++23 toolchain and CMake.
+- Consistent physical units for sensor readings and dedicated configuration objects for each sensing block.
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+## Add to your CMake project
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+Choose one of the following integration options.
 
-## Add your files
-
-* [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-* [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
-
-```
-cd existing_repo
-git remote add origin https://git.elektronika.agh.edu.pl/swaw/icm-20948.git
-git branch -M main
-git push -uf origin main
-```
-
-## Integrate with your tools
-
-* [Set up project integrations](https://git.elektronika.agh.edu.pl/swaw/icm-20948/-/settings/integrations)
-
-## Collaborate with your team
-
-* [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-* [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-* [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-* [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-* [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
-
-## Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
-* [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/)
-* [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-* [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-* [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-* [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+### Option A — `CPM.cmake`
 
 ## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+This project uses CPM.cmake for source consumption and also supports installable CMake package metadata.
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+Using CPM.cmake in your project:
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+```cmake
+# Download CPM.cmake (pin version as needed)
+file(DOWNLOAD
+  https://github.com/cpm-cmake/CPM.cmake/releases/download/v0.42.0/CPM.cmake
+  ${CMAKE_BINARY_DIR}/cmake/CPM.cmake
+  EXPECTED_HASH SHA256=2020b4fc42dba44817983e06342e682ecfc3d2f484a581f11cc5731fbe4dce8a
+)
+include(${CMAKE_BINARY_DIR}/cmake/CPM.cmake)
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+# Add icm-2048 (pin to a released tag or major stream)
+CPMAddPackage("gh:jmacheta/icm-20948#v1")
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+# Link to your library
+add_executable(app main.c)
+target_link_libraries(app PRIVATE emc::icm-20948)
+```
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+## Build with CMakePresets
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+The project uses CMake and exposes the `enc::icm-20948` target.
+Unit tests are optional and pull GoogleTest only when test support is enabled.
 
-## License
-For open source projects, say how it is licensed.
+Configure the project:
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+```sh
+cmake --preset native-gcc
+```
+
+Build the Debug targets:
+
+```sh
+cmake --build --preset native-gcc-all
+```
+
+## Porting guide
+
+To integrate the driver on a new platform, only the transport layer needs to be adapted.
+
+- Provide a `chip_select(bool)` callback that asserts CS on `true` and releases it on `false`.
+- Provide a `read(std::uint8_t, std::span<std::byte>)` callback that sends the register address first and then reads the requested payload.
+- Provide a `write(std::uint8_t, std::span<std::byte const>)` callback that sends the register address first and then writes the payload bytes.
+- Translate platform or HAL failures to `std::error_code` values so the API can propagate transport errors without exceptions.
+- Keep the SPI transaction ordering compatible with the device timing requirements defined by your target platform.
+
+The driver is platform-independent and does not depend on any operating system, vendor SDK, or runtime framework.
+
+## API example
+
+```cpp
+#include <cstddef>
+#include <cstdint>
+#include <expected>
+#include <span>
+#include <system_error>
+
+#include <icm-20948/icm-20948.hpp>
+
+std::error_code platform_spi_read(std::uint8_t reg, std::span<std::byte> data);
+std::error_code platform_spi_write(std::uint8_t reg, std::span<std::byte const> data);
+void platform_chip_select(bool active);
+
+std::expected<icm20948::Acceleration, std::error_code> read_acceleration_sample() {
+  auto driver_result = icm20948::ICM20948::create({
+    .chip_select = platform_chip_select,
+    .read = platform_spi_read,
+    .write = platform_spi_write,
+  });
+
+  if(!driver_result) {
+    return std::unexpected(driver_result.error());
+  }
+
+  auto driver = std::move(*driver_result);
+
+  if(auto ec = driver.connect()) {
+    return std::unexpected(ec);
+  }
+
+  if(driver.is_sleeping()) {
+    if(auto ec = driver.wake()) {
+      return std::unexpected(ec);
+    }
+  }
+
+  if(auto ec = driver.configure_accelerometer({
+       .range = icm20948::AccelerometerRange::g_4,
+       .output_data_rate_hz = 1125,
+       .filter_frequency_hz = 111,
+     })) {
+    return std::unexpected(ec);
+  }
+
+  return driver.read_acceleration();
+}
+```
