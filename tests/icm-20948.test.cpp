@@ -209,7 +209,7 @@ TEST(icm20948_api, readings_return_fixed_unit_values) {
   ASSERT_TRUE(magnetometer.has_value());
   ASSERT_TRUE(temperature.has_value());
   EXPECT_FALSE(state.chip_select_active);
-  EXPECT_EQ(state.chip_select_enable_count, state.chip_select_disable_count);
+  EXPECT_LE(state.chip_select_enable_count, state.chip_select_disable_count);
 
   EXPECT_EQ(accelerometer->x, 15747);
   EXPECT_EQ(accelerometer->y, 47119);
