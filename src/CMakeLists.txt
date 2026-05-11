@@ -1,5 +1,5 @@
 add_library(icm-20948)
-add_library(ecpp::icm-20948 ALIAS icm-20948)
+add_library(emc::icm-20948 ALIAS icm-20948)
 
 target_compile_features(icm-20948 PUBLIC cxx_std_23)
 

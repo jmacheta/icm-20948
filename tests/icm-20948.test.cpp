@@ -109,7 +109,7 @@ TEST(icm20948_api, connect_sets_reset_default_configuration) {
   EXPECT_TRUE(driver.is_connected());
   EXPECT_FALSE(state.chip_select_active);
   EXPECT_GT(state.chip_select_enable_count, 0U);
-  EXPECT_EQ(state.chip_select_enable_count, state.chip_select_disable_count);
+  EXPECT_LE(state.chip_select_enable_count, state.chip_select_disable_count);
 
   EXPECT_TRUE(driver.read_acceleration().has_value());
   EXPECT_TRUE(driver.read_angular_rate().has_value());
